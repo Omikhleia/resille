@@ -1,5 +1,9 @@
 # resille
 
+[![Version](https://img.shields.io/github/v/tag/Omikhleia/resille?label=ghcr&logo=docker)](https://github.com/Omikhleia/resille/pkgs/container/resille)
+[![Build](https://github.com/Omikhleia/resille/actions/workflows/docker-tag-publish.yml/badge.svg)](https://github.com/Omikhleia/resille/actions/workflows/docker-tag-publish.yml)
+[![License](https://img.shields.io/github/license/Omikhleia/resille)](LICENSE)
+
 The _résille_ project is a docker-based digital typesetting system.
 
 It is based on the [SILE typesetting system](https://sile-typesetter.org/) and extends it with additional modules and tools for professional book production.
@@ -7,6 +11,16 @@ It is based on the [SILE typesetting system](https://sile-typesetter.org/) and e
 It notably integrates the [resilient.sile](https://github.com/Omikhleia/resilient.sile) collection of modules and tools for advanced book production.
 
 The image also bundles a curated set of fonts, to facilitate high-quality typesetting out of the box.
+
+## Running a released version
+
+Tagged versions are published on the GitHub Container Registry. From the directory containing your document:
+
+```sh
+docker run --rm -v "$PWD":/data ghcr.io/omikhleia/resille:1.0.0 document.sil
+```
+
+Replace `1.0.0` with the wanted version (or use `latest`).
 
 ## Building the image(s)
 

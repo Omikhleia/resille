@@ -1,0 +1,48 @@
+name: docker-tag-publish
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+          labels: |
+            org.opencontainers.image.title=SILE with the resilient collection
+            org.opencontainers.image.description=SILE typesetter, resilient.sile, Graphviz, Inkscape, LilyPond, Ghostscript, GraphicsMagick and fonts, on Ubuntu 24.04
+            org.opencontainers.image.documentation=${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}/build/THIRD-PARTY.md
+
+      # amd64 only: the pinned Graphviz debs are amd64.
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: build/Dockerfile
+          platforms: linux/amd64
+          push: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          build-args: NONFREE_FONTS=false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          sbom: true

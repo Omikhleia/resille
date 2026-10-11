@@ -1,0 +1,3 @@
+# Local font downloads from the Makefiles
+build/.fonts/
+build/.sources/
