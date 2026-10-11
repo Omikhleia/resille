@@ -31,7 +31,7 @@ alias resille='docker run -it --rm --volume "$(pwd):/data" --user "$(id -u):$(id
 And use it, from the directory containing your document, as follows:
 
 ```sh
-resille -u inputters.silm book/book.silm
+resille book/book.silm
 ```
 
 ## Building local image(s)

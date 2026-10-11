@@ -1,3 +1,9 @@
 # Local font downloads from the Makefiles
 build/.fonts/
 build/.sources/
+
+# Generated document output
+docs/*.pdf
+docs/*.toc
+docs/*.ref
+docs/*.idx

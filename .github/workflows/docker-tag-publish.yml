@@ -12,6 +12,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
     steps:
       - uses: actions/checkout@v4
 
@@ -46,3 +48,26 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true
+
+  release-document:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Typeset the document with the published image
+        run: |
+          # Two passes, so that the cross-references and the table of contents settle.
+          for pass in 1 2; do
+            docker run --rm --volume "$PWD:/data" --user "$(id -u):$(id -g)" \
+              ghcr.io/${{ github.repository }}:${{ needs.build.outputs.version }} \
+              -e "require('resilient.bootstrap')" docs/resille.silm
+          done
+          test -s docs/resille.pdf
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: docs/resille.pdf

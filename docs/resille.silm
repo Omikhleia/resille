@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Omikhleia/resilient.sile/v4.2.0/schemas/masterfile.json
+# $schema: https://raw.githubusercontent.com/Omikhleia/resilient.sile/v4.2.0/schemas/masterfile.json
+masterfile: 1.0
+metadata:
+  title: Résille /ʁe.zij/
+  subtitle: A Docker-based Digital Typesetting Framework
+  keywords:
+    - Digital typesetting 
+  authors: Omikhleia
+  publisher: The Résille Project
+  pubdate: 2026-10-11
+  url: https://github.com/Omikhleia/resille
+  copyright: © 2026, Omikhleia.
+  legal: |
+    This document is published under the Creative Commons Attribution Share-Alike 4.0 license (CC BY-SA 4.0).
+font:
+  family: Libertinus Serif
+  size: 10pt
+language: en
+book:
+  enabled:
+    cover: true
+    bookmatter: false
+  cover:
+    background: "#9ebd76"
+    front:
+      template: cover
+sile:
+  options:
+    papersize: 6in x 9in
+    layout: ateliers demiluxe
+    headers: novel
+    resolution: 300
+  settings:
+    textsubsuper.fake: false
+    document.baselineskip: 1.2em
+    document.lineskip: 0em
+    epigraph.width: 75%fw
+    document.parindent: 0em
+    document.parskip: 0.5em
+    typesetter.italicCorrection: true
+content:
+  chapters:
+    - note.dj
