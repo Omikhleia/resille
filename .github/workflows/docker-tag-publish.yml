@@ -60,10 +60,11 @@ jobs:
 
       - name: Typeset the document with the published image
         run: |
+          image="ghcr.io/${GITHUB_REPOSITORY,,}:${{ needs.build.outputs.version }}"
           # Two passes, so that the cross-references and the table of contents settle.
           for pass in 1 2; do
             docker run --rm --volume "$PWD:/data" --user "$(id -u):$(id -g)" \
-              ghcr.io/${{ github.repository }}:${{ needs.build.outputs.version }} \
+              "$image" \
               -e "require('resilient.bootstrap')" docs/resille.silm
           done
           test -s docs/resille.pdf
