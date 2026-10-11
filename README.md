@@ -4,13 +4,13 @@
 [![Build](https://github.com/Omikhleia/resille/actions/workflows/docker-tag-publish.yml/badge.svg)](https://github.com/Omikhleia/resille/actions/workflows/docker-tag-publish.yml)
 [![License](https://img.shields.io/github/license/Omikhleia/resille)](LICENSE)
 
-The _résille_ project is a docker-based digital typesetting system.
+This is _résille_ (pronounced /ʁe.sij/), a Docker-based digital typesetting system.
 
-It is based on the [SILE typesetting system](https://sile-typesetter.org/) and extends it with additional modules and tools for professional book production.
+It bundles the [SILE typesetting system](https://sile-typesetter.org/), the [_re·sil·ient_](https://github.com/Omikhleia/resilient.sile) collection of modules for advanced document and book production, the tools they rely on, additional components, and a curated set of fonts.
 
-It notably integrates the [resilient.sile](https://github.com/Omikhleia/resilient.sile) collection of modules and tools for advanced book production.
+It is for anyone who wants to typeset documents or books with a ready-to-use environment for high-quality typesetting, without needing to install anything on the host system.
 
-The image also bundles a curated set of fonts, to facilitate high-quality typesetting out of the box.
+Packaging all of this for every host system and Linux distribution is difficult, so a container is used instead. The only prerequisite is Docker or a compatible container runtime.
 
 ## Running a released version
 
