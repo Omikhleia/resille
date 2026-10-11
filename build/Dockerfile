@@ -67,8 +67,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # The makefile will download and install them in .fonts/
 COPY ./build/Makefile-fonts ./
 RUN make -f Makefile-fonts allfonts
-COPY ./build/Makefile-extra-fonts ./
-RUN make -f Makefile-extra-fonts allfonts
+
+# Non-free fonts are excluded by default; use --build-arg NONFREE_FONTS=true to include them.
+ARG NONFREE_FONTS=false
+COPY ./build/Makefile-fonts-nonfree ./
+RUN if [ "$NONFREE_FONTS" = "true" ]; then make -f Makefile-fonts-nonfree allfonts; fi
 
 # ---------- STAGE SILE ----------
 FROM build AS sile

@@ -52,17 +52,6 @@ DOCSFONTFILES += Lato-Bold.ttf Lato-BoldItalic.ttf
 	bsdtar -x -f $< -C $(dir $@) --strip-components 1 $(basename $(<F))/$(notdir $@)
 	touch $@
 
-# -- Symbola
-DOCSFONTFILES += Symbola.otf
-
-.fonts/Symbola.otf: | .fonts
-	curl -fsSL https://github.com/ChiefMikeK/ttf-symbola/raw/master/Symbola-13.otf -o $@
-# .sources/Symbola.zip: | .sources
-# 	curl -fsSL https://web.archive.org/web/20200617144517/https://dn-works.com/wp-content/uploads/2020/UFAS-Fonts/$(notdir $@) -o $@
-# .fonts/Symbola%: .sources/Symbola.zip | .fonts
-# 	bsdtar -x -f $< -C $(dir $@) $(notdir $@)
-# 	touch $@
-
 # Fredrick Brennan
 #   King James Version 1611
 DOCSFONTFILES += KJV1611.otf
@@ -96,17 +85,6 @@ DOCSFONTFILES += CaslonAntique.ttf CaslonAntique-Italic.ttf CaslonAntique-Bold.t
 	bsdtar -x -f $< -C $(dir $@) $(notdir $@)
 	touch $@
 
-# -- Dr. Robert Pfeffer (CAUTION: free only for non-commercial and academic use)
-#    Ulfilas II
-DOCSFONTFILES += Ulfilas-II-normal.otf Ulfilas-II-kursiv.otf Ulfilas-II-fett.otf
-
-.sources/ulfilas.zip: | .sources
-	curl -fsSL http://robert-pfeffer.net/schriftarten/$(notdir $@) -o $@
-.fonts/Ulfilas%: .sources/ulfilas.zip | .fonts
-	bsdtar -x -f $< -C $(dir $@) "$(subst -, ,$(notdir $@))"
-	mv "$(subst -, ,$@)" $@
-	touch '$@'
-
 # -- Georg Mayr-Duffner
 #    EB Garamond
 DOCSFONTFILES += EBGaramond12-Regular.otf EBGaramond12-Italic.otf
@@ -116,6 +94,26 @@ DOCSFONTFILES += EBGaramond08-Regular.otf EBGaramond08-Italic.otf
 	curl -fsSL https://github.com/georgd/EB-Garamond/releases/download/nightly/$(notdir $@) -o $@
 .fonts/EBGaramond%: .sources/EBGaramond.zip | .fonts
 	bsdtar -x -f $< -C $(dir $@) $(notdir $@)
+	touch $@
+
+# -- MyNerve (a font for nerve-wracking situations)
+# https://github.com/carolinashort/MyNerve/blob/main/fonts/otf/Mynerve-Regular.otf
+
+DOCSFONTFILES += Mynerve-Regular.otf
+
+.fonts/Mynerve-Regular.otf: | .fonts
+	curl -fsSL https://raw.githubusercontent.com/carolinashort/MyNerve/refs/heads/main/fonts/otf/Mynerve-Regular.otf -o $@
+
+# -- Amiri (a classical Arabic and Latin typeface)
+# https://github.com/aliftype/amiri/releases/download/1.003/Amiri-1.003.zip
+
+DOCSFONTFILES += Amiri-Regular.ttf Amiri-Italic.ttf Amiri-Bold.ttf Amiri-BoldItalic.ttf AmiriQuran.ttf AmiriQuranColored.ttf
+
+.sources/Amiri-1.003.zip: | .sources
+	curl -fsSL https://github.com/aliftype/amiri/releases/download/1.003/$(notdir $@) -o $@
+
+.fonts/Amiri%: .sources/Amiri-1.003.zip | .fonts
+	bsdtar -x -f $< -C $(dir $@) --strip-components 1 Amiri-1.003/$(notdir $@)
 	touch $@
 
 allfonts: $(addprefix .fonts/,$(DOCSFONTFILES))

@@ -1,0 +1,32 @@
+.fonts:
+	[ -h .fonts ] || mkdir -p $@
+
+.sources:
+	[ -h .sources ] || mkdir -p $@
+
+# Don't let make delete things we had to download
+.PRECIOUS: .fonts/% .sources/%
+
+# -- Symbola
+DOCSFONTFILES += Symbola.otf
+
+.fonts/Symbola.otf: | .fonts
+	curl -fsSL https://github.com/ChiefMikeK/ttf-symbola/raw/master/Symbola-13.otf -o $@
+# .sources/Symbola.zip: | .sources
+# 	curl -fsSL https://web.archive.org/web/20200617144517/https://dn-works.com/wp-content/uploads/2020/UFAS-Fonts/$(notdir $@) -o $@
+# .fonts/Symbola%: .sources/Symbola.zip | .fonts
+# 	bsdtar -x -f $< -C $(dir $@) $(notdir $@)
+# 	touch $@
+
+# -- Dr. Robert Pfeffer (CAUTION: free only for non-commercial and academic use)
+#    Ulfilas II
+DOCSFONTFILES += Ulfilas-II-normal.otf Ulfilas-II-kursiv.otf Ulfilas-II-fett.otf
+
+.sources/ulfilas.zip: | .sources
+	curl -fsSL http://robert-pfeffer.net/schriftarten/$(notdir $@) -o $@
+.fonts/Ulfilas%: .sources/ulfilas.zip | .fonts
+	bsdtar -x -f $< -C $(dir $@) "$(subst -, ,$(notdir $@))"
+	mv "$(subst -, ,$@)" $@
+	touch '$@'
+
+allfonts: $(addprefix .fonts/,$(DOCSFONTFILES))
