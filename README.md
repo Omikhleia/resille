@@ -4,7 +4,7 @@
 [![Build](https://github.com/Omikhleia/resille/actions/workflows/docker-tag-publish.yml/badge.svg)](https://github.com/Omikhleia/resille/actions/workflows/docker-tag-publish.yml)
 [![License](https://img.shields.io/github/license/Omikhleia/resille)](LICENSE)
 
-This is _résille_ (pronounced /ʁe.sij/), a Docker-based digital typesetting system.
+This is _résille_ (pronounced /ʁe.zij/), a Docker-based digital typesetting system.
 
 It bundles the [SILE typesetting system](https://sile-typesetter.org/), the [_re·sil·ient_](https://github.com/Omikhleia/resilient.sile) collection of modules for advanced document and book production, the tools they rely on, additional components, and a curated set of fonts.
 
@@ -57,6 +57,10 @@ docker build --network=host -f build/Dockerfile -t resille .
 # Including the non-redistributable fonts, with host network; do not publish.
 docker build --network=host -f build/Dockerfile --build-arg NONFREE_FONTS=true -t resille:nonfree .
 ```
+
+## Example
+
+A small sample document, generated with the image itself, is attached as a PDF to each [release](https://github.com/Omikhleia/resille/releases/latest).
 
 ## About the name
 
