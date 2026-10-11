@@ -14,15 +14,27 @@ The image also bundles a curated set of fonts, to facilitate high-quality typese
 
 ## Running a released version
 
-Tagged versions are published on the GitHub Container Registry. From the directory containing your document:
+Tagged versions are published on the GitHub Container Registry. Pull the image:
 
 ```sh
-docker run --rm -v "$PWD":/data ghcr.io/omikhleia/resille:1.0.0 document.sil
+docker pull ghcr.io/omikhleia/resille:latest
 ```
 
-Replace `1.0.0` with the wanted version (or use `latest`).
+Replace `latest` with a specific version to pin it.
 
-## Building the image(s)
+Then define an alias...
+
+```sh
+alias resille='docker run -it --rm --volume "$(pwd):/data" --user "$(id -u):$(id -g)" ghcr.io/omikhleia/resille:latest -e "require('"'"'resilient.bootstrap'"'"')"'
+```
+
+And use it, from the directory containing your document, as follows:
+
+```sh
+resille -u inputters.silm book/book.silm
+```
+
+## Building local image(s)
 
 From the repository root:
 
