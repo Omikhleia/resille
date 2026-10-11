@@ -1,38 +1,25 @@
-# ---------- BUILD STAGE BASE ----------
+# ---------- BASE STAGE (SHARED BY OTHER STAGES) ----------
 # Noble Numbat (LTS, supported until 2029)
-FROM ubuntu:24.04 AS build
+FROM ubuntu:24.04 AS ubuntu-base
 
 ENV DEBIAN_FRONTEND=noninteractive
-
 WORKDIR /workspace
+
+# ---------- BUILD STAGE ----------
+FROM ubuntu-base AS build
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         # SYSTEM TOOLS
         # - ca-certificates: to ensure secure connections
-        # - apt-transport-https: to allow APT to use HTTPS
         # - software-properties-common: to manage PPAs (and have add-apt-repository)
         ca-certificates \
-        apt-transport-https \
         software-properties-common \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        # DOWNLOAD & EXTRACTION TOOLS
-        # - curl: for fetching font files in the Makefile-fonts, and graphviz installation
-        # - xz-utils: for extracting the graphviz .tar.xz file
-        # - libarchive-tools: for 'bsdtar' compatibility (used in the Makefile-fonts)
-        curl \
-        xz-utils \
-        libarchive-tools \
-        # - build-essential: for 'make' and 'gcc' later needed by luarocks for some packages
-        build-essential \
-        # LUA TOOLS & LUAJIT
+        # LUAJIT
         # - luajit: the pinned version of SILE uses it, so we want it too for consistency
-        # - luarocks: needed to install resilient.sile and its dependencies
-        # - git: needed by luarocks to fetch some packages
         luajit \
-        luarocks \
-        git \
         # DEPENDENCIES NEEDED BY RESILIENT.SILE (see documentation)
         # except graphiz see below (Problem 1)
         graphicsmagick \
@@ -45,21 +32,36 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # The version of graphviz in the Ubuntu 24.x repositories is VERY old...
 # So we go for a custom installation of a pinned version of Graphviz 13.1.2.
 # We need the universe repository for some dependencies of graphviz.
-RUN add-apt-repository universe \
- && apt-get update && \
-    apt-get install -y curl xz-utils \
- && curl -fSL "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.2/ubuntu_24.04_graphviz-13.1.2-debs.tar.xz" \
+# The archive also has docs, development packages, language bindings, and debug symbols:
+# we only need the core binaries for our purposes.
+# curl and xz-utils are temporary here: we remove them in this same layer after unpacking.
+RUN . /etc/os-release \
+ && add-apt-repository universe \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends curl xz-utils \
+ && curl -fSL "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.2/ubuntu_${VERSION_ID}_graphviz-13.1.2-debs.tar.xz" \
       -o graphviz.tar.xz \
  && tar -xJf graphviz.tar.xz \
- && apt-get install -y ./*.deb \
- && apt-get clean && rm -rf /var/lib/apt/lists/* graphviz.tar.xz ./*.deb \
+ && apt-get install -y --no-install-recommends \
+         ./graphviz_13.1.2-1_amd64.deb \
+         ./libgraphviz4_13.1.2-1_amd64.deb \
+ && apt-get purge -y curl xz-utils \
+ && apt-get clean && rm -rf /var/lib/apt/lists/* graphviz.tar.xz ./*.deb ./*.ddeb \
  # Verify installation
  && dot -V
 
 # ---------- FONTS STAGE ----------
-FROM build AS fonts
+FROM ubuntu-base AS fonts
 
-WORKDIR /workspace
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        # - curl: for fetching font files in the Makefile-fonts,
+        curl \
+        # - libarchive-tools: for 'bsdtar' compatibility (used in the Makefile-fonts)
+        libarchive-tools \
+        # - make: for the font Makefiles
+        make \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Add curated set of decent fonts for examples
 # The makefile will download and install them in .fonts/
@@ -71,17 +73,26 @@ RUN make -f Makefile-extra-fonts allfonts
 # ---------- STAGE SILE ----------
 FROM build AS sile
 
-WORKDIR /workspace
-
 # Add the SILE PPA repository and install SILE
 # software-properties-common is needed to manage PPAs (and have add-apt-repository)
 # SILE is then pinned to version 0.15.13
-RUN add-apt-repository ppa:sile-typesetter/sile && apt-get update && apt-cache policy sile \
- && apt-get update && apt-get install -y sile=0.15.13-1ppa1~ubuntu24.04 \
+RUN . /etc/os-release \
+ && add-apt-repository ppa:sile-typesetter/sile \
+ && apt-get update && apt-get install -y sile=0.15.13-1ppa1~ubuntu${VERSION_ID} \
  && apt-get clean && rm -rf /var/lib/apt/lists/* \
  # Verify installation
  # For reference I got: SILE v0.15.13 (LuaJIT 2.1.1703358377) [Rust]
  && sile --version
+
+# ---------- BUILD LUAROCKS PACKAGES ----------
+FROM sile AS rocks
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        # - luarocks: needed to install resilient.sile and its dependencies
+        luarocks \
+        # - git: needed by luarocks to fetch some packages
+        git \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Check the Lua version used by SILE and set it as the default for LuaRocks
 RUN sile -q -e 'print(SILE.lua_version); os.exit()' > /tmp/LVER \
@@ -96,7 +107,10 @@ RUN sile -q -e 'print(SILE.lua_version); os.exit()' > /tmp/LVER \
 # Worse, some dependencies seem old (e.g. lpeg 1.0.2)...
 # So enforce installation of the dependencies in versions needed by SILE.
 # Some will need compilation, and development headers...
+# The compiler (needed by some low-level rocks) and development headers
+# stay in this stage only.
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
         zlib1g-dev \
         libexpat1-dev \
         libssl-dev \
@@ -108,7 +122,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Yay, at last!
 RUN luarocks install resilient.sile && luarocks list
 
-# Copy the fonts we installed in the fonts stage
+# ---------- RUNTIME IMAGE ----------
+FROM sile AS runtime
+
+# Copy installed LuaRocks packages without the compiler toolchain.
+COPY --from=rocks /usr/local /usr/local
+
 COPY --from=fonts /workspace/.fonts /.fonts
 
 WORKDIR /data
