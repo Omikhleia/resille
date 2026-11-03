@@ -72,6 +72,8 @@ It's also a pun on SILE, which it wraps up and holds together with everything el
 
 The build files of this repository (Dockerfile, Makefiles, scripts) are licensed under the [GNU General Public License v3.0](LICENSE).
 
-The image bundles third-party software and fonts, each under its own license. The inventory is in [THIRD-PARTY.md](build/THIRD-PARTY.md).
+Some source code files (C/C++) are licensed under the [GNU General Public License v3.0](LICENSE), as noted in their respective headers.
+
+The image bundles third-party software and fonts, each under its own license. A more complete inventory is in [THIRD-PARTY.md](build/THIRD-PARTY.md).
 
 The default image contains only redistributable fonts. An image built with `NONFREE_FONTS=true` includes fonts that are not redistributable, so it is for personal use only and must not be published.

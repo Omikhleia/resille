@@ -33,8 +33,20 @@ SILE comes from a PPA, so its source is in the PPA's source package on Launchpad
 | Component | Shipped as | License |
 |---|---|---|
 | libtexpdf | `libtexpdf.so` and headers | GPL-2+ (derived from dvipdfmx) |
-| imagesize | `lua-libraries/imagesize.lua` | Artistic-2.0 or LGPL, at your choice |
+| imagesize (*) | `lua-libraries/imagesize.lua` | Artistic-2.0 or LGPL, at your choice |
 | char-def | `lua-libraries/char-def.lua` | ConTeXt, with data from the Unicode Consortium's UNIDATA |
+
+(*) Not used with the libtexpdf backend in SILE.
+
+### Additional components
+
+| Component | Shipped as | License |
+|---|---|---|
+| imagehelper | `imagehelper.so` | GPL-3.0-only |
+| poppler (poppler-cpp) | `libpoppler-cpp0t64`, linked by `imagehelper.so` | GPL-2, GPL-3 (some files GPL-2+) |
+| libpng | linked by `imagehelper.so` | PNG Reference Library License v2 |
+| libjpeg-turbo | linked by `imagehelper.so` | BSD-3-Clause, IJG, zlib |
+| OpenJPEG | linked by `imagehelper.so` | BSD-2-Clause |
 
 ## Rocks
 
@@ -71,6 +83,7 @@ Installed with LuaRocks, license as declared in each rock's metadata.
 | piecharts.sile | MIT |
 | ptable.sile | MIT |
 | qrcode.sile | BSD 3-clause |
+| resile | GPL-3.0-only |
 | resilient.sile | MIT |
 | rough | MIT |
 | sha1 | MIT |
