@@ -12,6 +12,12 @@ It is for anyone who wants to typeset documents or books with a ready-to-use env
 
 Packaging all of this for every host system and Linux distribution is difficult, so a container is used instead. The only prerequisite is Docker or a compatible container runtime.
 
+## What résille is, and is not
+
+_Résille_ is not SILE. It builds on SILE 0.15.13 and extends it with additional components and tools.
+
+It generates PDF 1.7 documents, and can import PDF files up to that version too (SILE alone is limited to PDF 1.5).
+
 ## Running a released version
 
 Tagged versions are published on the GitHub Container Registry. Pull the image:
@@ -58,6 +64,8 @@ docker build --network=host -f build/Dockerfile -t resille .
 docker build --network=host -f build/Dockerfile --build-arg NONFREE_FONTS=true -t resille:nonfree .
 ```
 
+Docker reuses cached layers on rebuilds. To force a complete rebuild, add `--no-cache`. This downloads everything again, including all fonts.
+
 ## Example
 
 A small sample document, generated with the image itself, is attached as a PDF to each [release](https://github.com/Omikhleia/resille/releases/latest).
@@ -72,6 +80,8 @@ It's also a pun on SILE, which it wraps up and holds together with everything el
 
 The build files of this repository (Dockerfile, Makefiles, scripts) are licensed under the [GNU General Public License v3.0](LICENSE).
 
-The image bundles third-party software and fonts, each under its own license. The inventory is in [THIRD-PARTY.md](build/THIRD-PARTY.md).
+Some source code files (C/C++) are licensed under the [GNU General Public License v3.0](LICENSE), as noted in their respective headers.
+
+The image bundles third-party software and fonts, each under its own license. A more complete inventory is in [THIRD-PARTY.md](build/THIRD-PARTY.md).
 
 The default image contains only redistributable fonts. An image built with `NONFREE_FONTS=true` includes fonts that are not redistributable, so it is for personal use only and must not be published.

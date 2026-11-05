@@ -87,6 +87,61 @@ RUN . /etc/os-release \
  # For reference I got: SILE v0.15.13 (LuaJIT 2.1.1703358377) [Rust]
  && sile --version
 
+# ---------- BUILD C/C++ LUA MODULES ----------
+FROM ubuntu-base AS cpp
+
+# SILE runs on LuaJIT, so we build against the LuaJIT headers (Lua 5.1 API)
+# and deliberately do not link any Lua library: symbols come from the host process.
+
+# Compiler and development headers stay in this stage only.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        autoconf \
+        automake \
+        build-essential \
+        libtool \
+        pkg-config \
+        libluajit-5.1-dev \
+        libpoppler-cpp-dev \
+        libpng-dev \
+        libjpeg-dev \
+        libopenjp2-7-dev \
+        zlib1g-dev \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
+COPY ./fusile/src/imagehelper.cpp ./
+
+RUN g++ -O2 -fPIC -shared \
+        -std=c++17 \
+        -Wall -Wextra -Wpedantic -Werror \
+        -Werror=return-type \
+        -Wshadow \
+        -Wconversion \
+        -Wno-unused-parameter \
+        imagehelper.cpp \
+        -o imagehelper.so \
+        $(pkg-config --cflags luajit) \
+        $(pkg-config --cflags --libs poppler-cpp libpng libjpeg libopenjp2)
+
+WORKDIR /src/libtexpdf
+COPY ./textile/*.c ./textile/*.h ./textile/Makefile.am ./textile/configure.ac ./
+COPY ./textile/dvipdfm-x/ dvipdfm-x/
+COPY ./textile/build-aux/ build-aux/
+COPY ./textile/lua/ lua/
+
+RUN autoreconf -fi \
+ && ./configure --prefix=/usr/local --enable-shared --disable-static \
+ && make -j"$(nproc)" \
+ && make check \
+ && make install \
+ && test -s /usr/local/lib/libtexpdf.so
+
+RUN cc -std=gnu11 -fPIC -shared $(pkg-config --cflags luajit) \
+        -I/usr/local/include/libtexpdf \
+        lua/justenoughlibtexpdf.c \
+        -L/usr/local/lib -Wl,-rpath,/usr/local/lib -ltexpdf $(pkg-config --libs luajit) \
+        -o justenoughlibtexpdf.so
+
 # ---------- BUILD LUAROCKS PACKAGES ----------
 FROM sile AS rocks
 
@@ -125,11 +180,30 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Yay, at last!
 RUN luarocks install resilient.sile && luarocks list
 
+# Resille overrides of SILE components (from this repository tree).
+COPY ./resile ./resile
+RUN luarocks make resile/resile-dev-1.rockspec && luarocks list
+
 # ---------- RUNTIME IMAGE ----------
 FROM sile AS runtime
 
+# Runtime library for the imagehelper C++ module (the universe repository
+# is already enabled from the build stage).
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libpoppler-cpp0t64 \
+        libpng16-16t64 \
+        zlib1g \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Copy installed LuaRocks packages without the compiler toolchain.
 COPY --from=rocks /usr/local /usr/local
+
+# Copy the compiled libraries into the Lua C module path (as for LuaRocks),
+COPY --from=cpp /src/imagehelper.so /usr/local/lib/lua/5.1/imagehelper.so
+
+# Copy the installed libraries and SILE's LuaJIT binding from the C/C++ build stage.
+COPY --from=cpp /usr/local/lib/libtexpdf.so.0* /usr/local/lib/
+COPY --from=cpp /src/libtexpdf/justenoughlibtexpdf.so /usr/lib/x86_64-linux-gnu/sile/justenoughlibtexpdf.so
 
 COPY --from=fonts /workspace/.fonts /.fonts
 
