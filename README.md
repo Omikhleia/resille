@@ -98,3 +98,5 @@ Some source code files (C/C++) are licensed under the [GNU General Public Licens
 The image bundles third-party software and fonts, each under its own license. A more complete inventory is in [THIRD-PARTY.md](build/THIRD-PARTY.md).
 
 The default image contains only redistributable fonts. An image built with `NONFREE_FONTS=true` includes fonts that are not redistributable, so it is for personal use only and must not be published.
+
+![résille logo](docs/images/resille-banner.png)
