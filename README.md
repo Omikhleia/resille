@@ -12,6 +12,12 @@ It is for anyone who wants to typeset documents or books with a ready-to-use env
 
 Packaging all of this for every host system and Linux distribution is difficult, so a container is used instead. The only prerequisite is Docker or a compatible container runtime.
 
+## What résille is, and is not
+
+_Résille_ is not SILE. It builds on SILE 0.15.13 and extends it with additional components and tools.
+
+It generates PDF 1.7 documents, and can import PDF files up to that version too (SILE alone is limited to PDF 1.5).
+
 ## Running a released version
 
 Tagged versions are published on the GitHub Container Registry. Pull the image:
@@ -57,6 +63,8 @@ docker build --network=host -f build/Dockerfile -t resille .
 # Including the non-redistributable fonts, with host network; do not publish.
 docker build --network=host -f build/Dockerfile --build-arg NONFREE_FONTS=true -t resille:nonfree .
 ```
+
+Docker reuses cached layers on rebuilds. To force a complete rebuild, add `--no-cache`. This downloads everything again, including all fonts.
 
 ## Example
 
