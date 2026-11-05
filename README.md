@@ -16,7 +16,12 @@ Packaging all of this for every host system and Linux distribution is difficult,
 
 _Résille_ is not SILE. It builds on SILE 0.15.13 and extends it with additional components and tools.
 
-It generates PDF 1.7 documents, and can import PDF files up to that version too (SILE alone is limited to PDF 1.5).
+It generates PDF 1.7 documents, and can import PDF files up to that version too (SILE 0.15.13 alone is limited to PDF 1.5).
+
+In the (La)TeX ecosystem, TeX Live is a widely used, cross-platform distribution of TeX programs, macro packages, and fonts.
+
+_Résille_ aims to play a similar role: it provides a complete, ready-to-use environment for high-quality typesetting, delivered as a container rather than installed on the host system, and based on SILE rather than TeX.
+This keeps its tools, fonts, and configurations separate from those on your host, avoiding version conflicts.
 
 ## Running a released version
 
