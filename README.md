@@ -52,7 +52,11 @@ From the repository root:
 ```sh
 # Default image (redistributable fonts only).
 docker build -f build/Dockerfile -t resille .
+```
 
+Or:
+
+```sh
 # Including the non-redistributable fonts; do not publish.
 docker build -f build/Dockerfile --build-arg NONFREE_FONTS=true -t resille:nonfree .
 ```
@@ -64,7 +68,11 @@ That is:
 ```sh
 # Default image (redistributable fonts only), with host network.
 docker build --network=host -f build/Dockerfile -t resille .
+```
 
+Or:
+
+```sh
 # Including the non-redistributable fonts, with host network; do not publish.
 docker build --network=host -f build/Dockerfile --build-arg NONFREE_FONTS=true -t resille:nonfree .
 ```
