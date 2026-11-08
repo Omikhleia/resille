@@ -4,20 +4,23 @@ local package = pl.class(base)
 package._name = "folio"
 
 function package:incrementFolio ()
-   SILE.scratch.counters.folio.value = SILE.scratch.counters.folio.value + 1
+   self._counter.value = self._counter.value + 1
 end
 
 function package:outputFolio (frame)
    if not frame then
       frame = "folio"
    end
-   local folio = self.class.packages.counters:formatCounter(SILE.scratch.counters.folio)
+   local folio = self.class.packages.counters:formatCounter(self._counter)
+   if self._pageLabels then
+      self._pageLabels[self._pageIndex] = self._counter.value > 0 and folio or "-"
+   end
    if not SILE.quiet then
       io.stderr:write("[" .. folio .. "] ")
    end
-   if SILE.scratch.counters.folio.off then
-      if SILE.scratch.counters.folio.off == 2 then
-         SILE.scratch.counters.folio.off = false
+   if self._counter.off then
+      if self._counter.off == 2 then
+         self._counter.off = false
       end
    else
       local folioFrame = SILE.getFrame(frame)
@@ -49,9 +52,24 @@ end
 function package:_init (options)
    base._init(self)
    self:loadPackage("counters")
-   SILE.scratch.counters.folio = { value = 1, display = "arabic" }
+   -- Create and initialize the folio counter
+   self._counter = self.class:getCounter("folio")
+   self._counter.value = 1 -- default is 0 (and arabic numbering)
+   self._counter.format = nil -- HACK, API unclear here and pointer leaking in the indexer
+
+   if SILE.outputter.writePageLabels then
+      self._pageIndex = 1
+      self._pageLabels = {}
+      SILE.outputter:registerHook("prefinish", function (outputter)
+         outputter:writePageLabels(self._pageLabels, self._pageIndex)
+      end)
+   end
+
    self.class:registerHook("newpage", function ()
       self:incrementFolio()
+      if self._pageLabels then
+         self._pageIndex = self._pageIndex + 1
+      end
    end)
    self.class:registerHook("endpage", function ()
       self:outputFolio(options and options.frame)
@@ -61,15 +79,15 @@ end
 
 function package:registerCommands ()
    self:registerCommand("folios", function (_, _)
-      SILE.scratch.counters.folio.off = false
+      self._counter.off = false
    end)
 
    self:registerCommand("nofolios", function (_, _)
-      SILE.scratch.counters.folio.off = true
+      self._counter.off = true
    end)
 
    self:registerCommand("nofoliothispage", function (_, _)
-      SILE.scratch.counters.folio.off = 2
+      self._counter.off = 2
    end)
 
    self:registerCommand("nofoliosthispage", function (_, _)

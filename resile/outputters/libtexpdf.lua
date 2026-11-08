@@ -428,6 +428,54 @@ function outputter:setBookmark (dest, title, level)
    pdf.bookmark(d, level)
 end
 
+--- Write page labels
+--
+-- @tparam table labels Table mapping page numbers to their labels
+-- @tparam number pageCount Total number of pages
+function outputter:writePageLabels (labels, pageCount)
+   -- PDF Page Labels are used to store the mapping between page sequence numbers
+   -- and the actual page labels.
+   -- This is a "standard" feature in the PDF specifications since PDF v1.3.
+   -- See e.g. PDF v1.7 §8.3.1 (6th edition pp. 594-596) for more details.
+   -- Yet, support in viewers may vary.
+   --
+   -- Known not to honor page labels at this date (Nov. 2026):
+   --  - Okular (https://bugs.kde.org/show_bug.cgi?id=425099 opened in 2020)
+   --  - Chromium (https://github.com/mozilla/pdf.js/issues/6902 opened in 2015)
+   -- Known to honor page labels:
+   --  - Firefox since 2016 (https://github.com/mozilla/pdf.js/issues/6902 fixed in 2016)
+   --  - Evince
+   -- Uncertain support:
+   --  - muPDF (1.22 reports having some support, but I cannot confirm)
+   --
+   -- IMPLEMENTATION NOTE:
+   -- PDF supports ranges of page labels, allowing a single label definition to apply
+   -- to multiple consecutive pages; and different types for arabic, roman, etc.
+   -- We do not attempt to optimize for ranges and instead define each page label
+   -- individually; and consider all labels as strings.
+   -- In a regular (compressed) PDF, this should not be a significant overhead.
+   local catalog = pdf.get_dictionary("Catalog")
+   if pdf.lookup_dictionary(catalog, "PageLabels") then
+      -- Not supposed to occur.
+      SU.error("Cannot create PDF page labels: the catalog already has a /PageLabels entry")
+   end
+   local pageLabels = pdf.parse("<< /Nums [] >>")
+   local nums = pdf.lookup_dictionary(pageLabels, "Nums")
+   for page = 1, pageCount do
+      local text = labels[page]
+      if not text then
+         -- Not supposed to occur, gracefully defaulting.
+         SU.warn("Missing PDF page label for page " .. page)
+         text = "-"
+      end
+      local label = pdf.parse("<< >>")
+      pdf.add_dict(label, pdf.parse("/P"), pdf.string(SU.utf8_to_utf16be(text)))
+      pdf.push_array(nums, pdf.parse(tostring(page - 1)))
+      pdf.push_array(nums, label)
+   end
+   pdf.add_dict(catalog, pdf.parse("/PageLabels"), pageLabels)
+end
+
 -- Assumes the caller known what they want to stuff in raw PDF format
 function outputter:drawRaw (literal)
    self:_ensureInit()

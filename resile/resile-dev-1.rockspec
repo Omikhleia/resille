@@ -19,5 +19,6 @@ build = {
   type = "builtin",
   modules = {
     ["sile.outputters.libtexpdf"] = "resile/outputters/libtexpdf.lua",
+    ["sile.packages.folio"] = "resile/packages/folio/init.lua",
   },
 }
