@@ -87,12 +87,34 @@ DOCSFONTFILES += CaslonAntique.ttf CaslonAntique-Italic.ttf CaslonAntique-Bold.t
 
 # -- Georg Mayr-Duffner
 #    EB Garamond
+#    Kept for compatibility with older books, but we may eventually remove it (and use Garamontio instead)
 DOCSFONTFILES += EBGaramond12-Regular.otf EBGaramond12-Italic.otf
 DOCSFONTFILES += EBGaramond08-Regular.otf EBGaramond08-Italic.otf
 
 .sources/EBGaramond.zip: | .sources
 	curl -fsSL https://github.com/georgd/EB-Garamond/releases/download/nightly/$(notdir $@) -o $@
 .fonts/EBGaramond%: .sources/EBGaramond.zip | .fonts
+	bsdtar -x -f $< -C $(dir $@) $(notdir $@)
+	touch $@
+
+# -- Yuansheng Zhao
+#    Garamond Math (OTF only)
+DOCSFONTFILES += Garamond-Math.otf
+
+.fonts/Garamond-Math.otf: | .fonts
+	curl -fsSL https://raw.githubusercontent.com/YuanshengZhao/Garamond-Math/master/$(notdir $@) -o $@
+
+# -- Michele Casanova
+#    Garamontio
+DOCSFONTFILES += Garamontio-Regular.ttf Garamontio-RegularItalic.ttf
+DOCSFONTFILES += Garamontio-Medium.ttf Garamontio-MediumItalic.ttf
+DOCSFONTFILES += Garamontio-SemiBold.ttf Garamontio-SemiBoldItalic.ttf
+DOCSFONTFILES += Garamontio-Bold.ttf Garamontio-BoldItalic.ttf
+DOCSFONTFILES += Garamontio-ExtraBold.ttf Garamontio-ExtraBoldItalic.ttf
+
+.sources/Garamontio-%.zip: | .sources
+	curl -fsSL https://codeberg.org/m-casanova/Garamontio/releases/download/v1.329/garamontio_ttf.zip -o $@
+.fonts/Garamontio%: .sources/Garamontio-%.zip | .fonts
 	bsdtar -x -f $< -C $(dir $@) $(notdir $@)
 	touch $@
 

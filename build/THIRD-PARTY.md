@@ -100,21 +100,24 @@ Installed with LuaRocks, license as declared in each rock's metadata.
 
 ### Redistributable
 
-| Font | Copyright holder | License |
-|---|---|---|
-| Amiri | The Amiri Project Authors | SIL OFL 1.1 |
-| Chomsky | Fredrick R. Brennan | SIL OFL 1.1 |
-| Cormorant (Infant) | The Cormorant Project Authors | SIL OFL 1.1 |
-| EB Garamond | Georg A. Duffner | SIL OFL 1.1 |
-| KJV1611 | Fredrick R. Brennan | SIL OFL 1.1 |
-| Lato | tyPoland Lukasz Dziedzic (Reserved Font Name "Lato") | SIL OFL 1.1 |
-| Libertinus | The Libertinus Project Authors | SIL OFL 1.1 |
-| Mynerve | The Mynerve Project Authors | SIL OFL 1.1 |
-| Hack | Source Foundry Authors; Bitstream, Inc. (DejaVu/Vera base) | MIT, with the Bitstream Vera license for the inherited work |
-| Zallman Caps | Dieter Steffmann (**) | Free (*) |
-| Caslon Antique | Dieter Steffmann | Free (*) |
-| DS Zierschrift | Dieter Steffmann | Free (*) |
-| Gingerbread Initials | Dieter Steffmann | Free (*) |
+| Font | Copyright holder | License | Type |
+|---|---|---|---|
+| EB Garamond (***) | Georg A. Duffner | SIL OFL 1.1 | Serif |
+| Garamontio | Michele Casanova (derived from EB Garamond by Octavio Pardo and Georg Duffner; includes characters from Garamond-Math by Yuansheng Zhao) | SIL OFL 1.1 | Serif |
+| Libertinus | The Libertinus Project Authors | SIL OFL 1.1 | Serif, Sans-serif |
+| Cormorant Infant | The Cormorant Project Authors | SIL OFL 1.1 | Ornamental serif |
+| Lato | tyPoland Lukasz Dziedzic | SIL OFL 1.1 | Sans-serif |
+| Hack | Source Foundry Authors; Bitstream, Inc. (DejaVu/Vera base) | MIT, with the Bitstream Vera license for the inherited work | Monospace |
+| Mynerve | The Mynerve Project Authors | SIL OFL 1.1 | Hand-written |
+| Caslon Antique | Dieter Steffmann | Free (*) | Vintage |
+| Garamond-Math | Yuansheng Zhao | SIL OFL 1.1 | Math |
+| Libertinus Math | The Libertinus Project Authors | SIL OFL 1.1 | Math |
+| Gingerbread Initials | Dieter Steffmann | Free (*) | Initials |
+| Zallman Caps | Dieter Steffmann (**) | Free (*) | Initials |
+| Amiri | The Amiri Project Authors | SIL OFL 1.1 | Arabic |
+| Chomsky | Fredrick R. Brennan | SIL OFL 1.1 | Gothic |
+| KJV1611 | Fredrick R. Brennan | SIL OFL 1.1 | Blackletter |
+| DS Zierschrift | Dieter Steffmann | Free (*) | Ornamental blackletter |
 
 
 (*) "Free" refers to the author's statement on 1001Fonts, dated 2015-01-21:
@@ -125,11 +128,13 @@ These fonts are included in good faith, in line with the author's stated intent.
 
 (**) Zallman Caps is derived from a design by D. Rakowski (1991). Only the license on Dieter Steffmann's work is considered here.
 
+(***) EB Garamond may be removed in a future version, possibly in favor of Garamontio.
+
 ### Not redistributable
 
 These fonts are not redistributable according to their respective licenses, and are not part of the base installation.
 
-| Font | Copyright holder | License |
-|---|---|---|
-| Symbola | Unicode Fonts for Ancient Scripts (UFAS) | "Free use of UFAS is strictly limited to personal use." |
-| Ulfilas II | Robert Pfeffer | "Free for non-commercial use." |
+| Font | Copyright holder | License | Type |
+|---|---|---|---|
+| Symbola | Unicode Fonts for Ancient Scripts (UFAS) | "Free use of UFAS is strictly limited to personal use." | Symbol |
+| Ulfilas II | Robert Pfeffer | "Free for non-commercial use." | Gothic historical script |
