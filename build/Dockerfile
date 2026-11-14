@@ -139,7 +139,7 @@ RUN autoreconf -fi \
 RUN cc -std=gnu11 -fPIC -shared $(pkg-config --cflags luajit) \
         -I/usr/local/include/libtexpdf \
         lua/justenoughlibtexpdf.c \
-        -L/usr/local/lib -Wl,-rpath,/usr/local/lib -ltexpdf $(pkg-config --libs luajit) \
+        -L/usr/local/lib -Wl,-rpath,/usr/local/lib -ltexpdf \
         -o justenoughlibtexpdf.so
 
 # ---------- BUILD LUAROCKS PACKAGES ----------
@@ -177,8 +177,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && luarocks list
 
 # Resilient packages and classes for SILE
-# Yay, at last!
-RUN luarocks install resilient.sile && luarocks list
+RUN luarocks install resilient.sile 4.2.0 && luarocks list
+
+# Updated SILE components from the missile submodule.
+COPY ./missile ./missile
+RUN luarocks make missile/missile-dev-1.rockspec && luarocks list
+
+# Identify the distribution while preserving SILE's version.
+RUN sed -i 's/SILE %s (%s)/RESILLE (SILE %s+) (%s)/' \
+    /usr/local/share/lua/5.1/sile/core/sile.lua
 
 # Resille overrides of SILE components (from this repository tree).
 COPY ./resile ./resile

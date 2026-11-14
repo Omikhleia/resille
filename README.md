@@ -47,7 +47,20 @@ resille book/book.silm
 
 ## Building local image(s)
 
-From the repository root:
+Clone the repository:
+
+```sh
+git clone https://github.com/Omikhleia/resille.git
+cd resille
+```
+
+Initialize the SILE submodule from the repository root:
+
+```sh
+git submodule update --init missile/sile
+```
+
+Then, build the Docker image from the repository root:
 
 ```sh
 # Default image (redistributable fonts only).

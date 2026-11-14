@@ -37,5 +37,5 @@ A second job, `release-document`, then typesets [`docs/resille.silm`](docs/resil
 
 ## Things to remember
 
-- Releases are not reproducible by design: the build picks up the current versions of unpinned fonts and rocks. Pinned: SILE, Graphviz and most font archives.
+- Releases are not reproducible by design: the build picks up the current versions of unpinned fonts and rocks. Pinned: SILE, `resilient.sile`, Graphviz and most font archives.
 - The license inventory for the image is in [build/THIRD-PARTY.md](build/THIRD-PARTY.md). Update it when components change.
