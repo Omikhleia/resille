@@ -84,6 +84,7 @@ Installed with LuaRocks, license as declared in each rock's metadata.
 | luautf8 | MIT |
 | lunajson | MIT/X11 |
 | mimetypes | MIT/X11 |
+| missile | MIT |
 | penlight | MIT/X11 |
 | piecharts.sile | MIT |
 | ptable.sile | MIT |
