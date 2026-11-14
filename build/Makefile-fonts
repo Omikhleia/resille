@@ -138,4 +138,21 @@ DOCSFONTFILES += Amiri-Regular.ttf Amiri-Italic.ttf Amiri-Bold.ttf Amiri-BoldIta
 	bsdtar -x -f $< -C $(dir $@) --strip-components 1 Amiri-1.003/$(notdir $@)
 	touch $@
 
+# -- Luciole (accessible text fonts and math font)
+DOCSFONTFILES += Luciole-Regular.ttf Luciole-Italic.ttf
+DOCSFONTFILES += Luciole-Bold.ttf Luciole-BoldItalic.ttf
+DOCSFONTFILES += Luciole-Math.otf
+
+.sources/Luciole.zip: | .sources
+	curl -fsSL https://www.luciole-vision.com/fonts/Luciole.zip -o $@
+.fonts/Luciole-%.ttf: .sources/Luciole.zip | .fonts
+	bsdtar -x -f $< -C $(dir $@) --strip-components 1 Luciole/$(notdir $@)
+	touch $@
+
+.sources/Luciole-Math.zip: | .sources
+	curl -fsSL https://www.luciole-vision.com/fonts/Luciole-Math.zip -o $@
+.fonts/Luciole-Math.otf: .sources/Luciole-Math.zip | .fonts
+	bsdtar -x -f $< -C $(dir $@) --strip-components 1 Luciole-Math/$(notdir $@)
+	touch $@
+
 allfonts: $(addprefix .fonts/,$(DOCSFONTFILES))

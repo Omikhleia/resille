@@ -107,11 +107,13 @@ Installed with LuaRocks, license as declared in each rock's metadata.
 | Libertinus | The Libertinus Project Authors | SIL OFL 1.1 | Serif, Sans-serif |
 | Cormorant Infant | The Cormorant Project Authors | SIL OFL 1.1 | Ornamental serif |
 | Lato | tyPoland Lukasz Dziedzic | SIL OFL 1.1 | Sans-serif |
+| Luciole | Luciole, Laurent Bourcellier, Jonathan Perez | CC BY 4.0 | Sans-serif |
 | Hack | Source Foundry Authors; Bitstream, Inc. (DejaVu/Vera base) | MIT, with the Bitstream Vera license for the inherited work | Monospace |
 | Mynerve | The Mynerve Project Authors | SIL OFL 1.1 | Hand-written |
 | Caslon Antique | Dieter Steffmann | Free (*) | Vintage |
 | Garamond-Math | Yuansheng Zhao | SIL OFL 1.1 | Math |
 | Libertinus Math | The Libertinus Project Authors | SIL OFL 1.1 | Math |
+| Luciole Math | Laurent Bourcellier, Jonathan Fabreguettes, Daniel Flipo | SIL OFL 1.1 | Math |
 | Gingerbread Initials | Dieter Steffmann | Free (*) | Initials |
 | Zallman Caps | Dieter Steffmann (**) | Free (*) | Initials |
 | Amiri | The Amiri Project Authors | SIL OFL 1.1 | Arabic |
