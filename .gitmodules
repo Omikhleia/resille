@@ -1,0 +1,4 @@
+[submodule "missile/sile"]
+	path = missile/sile
+	url = https://github.com/Omikhleia/resilient-types.git
+	branch = missile-0.15.13-1

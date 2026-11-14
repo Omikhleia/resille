@@ -180,6 +180,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Yay, at last!
 RUN luarocks install resilient.sile && luarocks list
 
+# Updated SILE components from the missile submodule.
+COPY ./missile ./missile
+RUN luarocks make missile/missile-dev-1.rockspec && luarocks list
+
 # Resille overrides of SILE components (from this repository tree).
 COPY ./resile ./resile
 RUN luarocks make resile/resile-dev-1.rockspec && luarocks list
