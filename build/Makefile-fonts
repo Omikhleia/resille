@@ -113,7 +113,7 @@ DOCSFONTFILES += Garamontio-Bold.ttf Garamontio-BoldItalic.ttf
 DOCSFONTFILES += Garamontio-ExtraBold.ttf Garamontio-ExtraBoldItalic.ttf
 
 .sources/Garamontio-%.zip: | .sources
-	curl -fsSL https://codeberg.org/m-casanova/Garamontio/releases/download/v1.329/garamontio_ttf.zip -o $@
+	curl -fsSL https://codeberg.org/m-casanova/Garamontio/releases/download/v1.332/garamontio_ttf.zip -o $@
 .fonts/Garamontio%: .sources/Garamontio-%.zip | .fonts
 	bsdtar -x -f $< -C $(dir $@) $(notdir $@)
 	touch $@
